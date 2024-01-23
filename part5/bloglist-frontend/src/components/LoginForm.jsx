@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleLogin }) => {
 
-  const [username, setUsername] = useState('harriskr')
-  const [password, setPassword] = useState('harriskr')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -12,7 +12,7 @@ const LoginForm = ({ handleLogin }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id='login-form'>
       <h2>Log in to application</h2>
       <div>
         username
@@ -34,7 +34,7 @@ const LoginForm = ({ handleLogin }) => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button id="login-button" type="submit">login</button>
+      <button id="login-button" value='submit the form' type="submit">login</button>
     </form>
   )
 }

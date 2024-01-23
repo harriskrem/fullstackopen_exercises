@@ -32,6 +32,7 @@ const App = () => {
     try {
       const user = await loginService.login(credentials)
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
     } catch (exception) {
       setErrorMessage('wrong credentials')
@@ -45,12 +46,10 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
   }
-
   const addBlog = (newBlog) => {
     blogService
       .create(newBlog)
       .then(() => {
-
         blogFormRef.current.toggleVisibility()
         blogService.getAll().then(blogs => {
           const lastItem = blogs[blogs.length - 1]
@@ -69,8 +68,9 @@ const App = () => {
       .update(blog.id, { ...blog, likes: Number(blog.likes) + 1 })
       .then(returnedBlog => {
         const indextoUpdate = blogs.findIndex(element => element.id.toString() === returnedBlog.id.toString())
-        let blogsCopy = blogs.splice()
+        let blogsCopy = [...blogs]
         blogsCopy[indextoUpdate].likes = returnedBlog.likes
+        // blogsCopy.sort((a, b) => a.likes < b.likes)
         setBlogs(blogsCopy)
       })
   }
@@ -83,7 +83,6 @@ const App = () => {
         })
     }
   }
-
   return (
     <div>
       <Notification errorMessage={errorMessage} successMessage={successMessage} />
@@ -97,8 +96,8 @@ const App = () => {
             <h2>create new</h2>
             <BlogForm addBlog={addBlog} />
           </Togglable>}
-          {blogs.toSorted((a, b) => a.likes < b.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} addLike={addLike} removeBlog={removeBlog} />
+          {blogs.toSorted((a, b) => ((a.likes ?? 0) < (b.likes ?? 0) ? 1 : -1)).map(blog =>
+            <Blog key={blog.id} blog={blog} addLike={addLike} removeBlog={removeBlog} user={user} />
           )}
         </>
       }

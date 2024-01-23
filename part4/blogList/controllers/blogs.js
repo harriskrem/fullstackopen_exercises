@@ -13,7 +13,6 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', middleware.userExtractor, async (request, response) => {
 
     const activeUser = request.user;
-    
     if (!activeUser.id) {
         return response.status(401).json({
             error: 'token invalid'

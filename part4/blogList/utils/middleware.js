@@ -3,8 +3,6 @@ const jwt = require('jsonwebtoken')
 
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method, request.path)
-    // logger.info('Body:  ', request.body)
-    // logger.info('---')
     next()
 }
 
@@ -32,9 +30,7 @@ const tokenExtractor = (request, response, next) => {
     if (authorization && authorization.startsWith('Bearer ')) {
         request.token = authorization.replace('Bearer ', '')
     }
-
     next()
-
 }
 
 const userExtractor = (request, response, next) => {
